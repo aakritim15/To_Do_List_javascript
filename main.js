@@ -6,19 +6,22 @@ window.addEventListener('load', () => {
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 
-		const task = input.value;
-        if(!task){
-            alert("Please enter a task");
-            return;
-        }
-        
+		const task = input.value.trim();
+		if (!task) {
+			alert("Please enter a task");
+			return;
+		}
+
 		const task_el = document.createElement('div');
 		task_el.classList.add('task');
 
 		const task_content_el = document.createElement('div');
 		task_content_el.classList.add('content');
 
-		task_el.appendChild(task_content_el);
+		
+		const task_checkbox_el = document.createElement('input');
+		task_checkbox_el.type = 'checkbox';
+		task_checkbox_el.classList.add('checkbox');
 
 		const task_input_el = document.createElement('input');
 		task_input_el.classList.add('text');
@@ -26,11 +29,13 @@ window.addEventListener('load', () => {
 		task_input_el.value = task;
 		task_input_el.setAttribute('readonly', 'readonly');
 
+		task_content_el.appendChild(task_checkbox_el);
 		task_content_el.appendChild(task_input_el);
+		task_el.appendChild(task_content_el);
 
 		const task_actions_el = document.createElement('div');
 		task_actions_el.classList.add('actions');
-		
+
 		const task_edit_el = document.createElement('button');
 		task_edit_el.classList.add('edit');
 		task_edit_el.innerText = 'Edit';
@@ -43,13 +48,12 @@ window.addEventListener('load', () => {
 		task_actions_el.appendChild(task_delete_el);
 
 		task_el.appendChild(task_actions_el);
-
 		list_el.appendChild(task_el);
 
 		input.value = '';
 
-		task_edit_el.addEventListener('click', (e) => {
-			if (task_edit_el.innerText.toLowerCase() == "edit") {
+		task_edit_el.addEventListener('click', () => {
+			if (task_edit_el.innerText.toLowerCase() === "edit") {
 				task_edit_el.innerText = "Save";
 				task_input_el.removeAttribute("readonly");
 				task_input_el.focus();
@@ -59,8 +63,16 @@ window.addEventListener('load', () => {
 			}
 		});
 
-		task_delete_el.addEventListener('click', (e) => {
+		task_delete_el.addEventListener('click', () => {
 			list_el.removeChild(task_el);
+		});
+
+		task_checkbox_el.addEventListener('change', () => {
+			if (task_checkbox_el.checked) {
+				task_input_el.classList.add("completed");
+			} else {
+				task_input_el.classList.remove("completed");
+			}
 		});
 	});
 });
